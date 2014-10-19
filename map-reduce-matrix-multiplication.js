@@ -1,42 +1,3 @@
-function mapReduce(input, map, reduce) {
-    // Map
-    var mapperOutput = [].concat.apply(
-        [], 
-        input.map(function(row) {        
-            var emitArray = [];
-            var emit = function(key, value) {
-                emitArray.push({
-                    key: key,
-                    value: value
-                });
-            };
-            map(row, emit);
-            return emitArray;
-        })
-    );
-    
-    // Group tuples with the same key
-    var reducerInput = {};
-    mapperOutput.forEach(function(keyValue){
-        var key = keyValue.key;
-        var value = keyValue.value;
-        if(!reducerInput[key]) {
-            reducerInput[key] = [];
-        }
-        reducerInput[key].push(value);
-    });
-    
-    // Reduce
-    var output = [];
-    for(var key in reducerInput) {
-        var values = reducerInput[key];
-        reduce(key, values, output);
-    }
-    
-    // That's all
-    return output;
-}
-
 function multiplyMatrixesMapReduce(a, b, resultName) {
     var map1 = function(row, emit) {
         var parts = row.split(",");
@@ -111,35 +72,3 @@ function multiplyMatrixesMapReduce(a, b, resultName) {
 
     return output2;
 }
-
-var a = [
-    "A,0,1,1.0",
-    "A,0,2,2.0",
-    "A,0,3,3.0",
-    "A,0,4,4.0",
-    "A,1,0,5.0",
-    "A,1,1,6.0",
-    "A,1,2,7.0",
-    "A,1,3,8.0",
-    "A,1,4,9.0"
-];
-
-var b = [
-    "B,0,1,1.0",
-    "B,0,2,2.0",
-    "B,1,0,3.0",
-    "B,1,1,4.0",
-    "B,1,2,5.0",
-    "B,2,0,6.0",
-    "B,2,1,7.0",
-    "B,2,2,8.0",
-    "B,3,0,9.0",
-    "B,3,1,10.0",
-    "B,3,2,11.0",
-    "B,4,0,12.0",
-    "B,4,1,13.0",
-    "B,4,2,14.0"
-];
-
-var c = multiplyMatrixesMapReduce(a, b, 'C');
-console.log(JSON.stringify(c, null, 4));
