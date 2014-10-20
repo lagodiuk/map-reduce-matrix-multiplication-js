@@ -27,12 +27,15 @@ function mapReduce(input, map, reduce) {
     });
     
     // Reduce
-    var output = [];
+    var outputArray = [];
+    var output = function(resultRow) {
+        outputArray.push(resultRow);
+    }
     for(var key in reducerInput) {
         var values = reducerInput[key];
         reduce(key, values, output);
     }
     
     // That's all
-    return output;
+    return outputArray;
 }

@@ -1,4 +1,6 @@
 function multiplyMatrixesMapReduce(a, b, config) {
+    var leftMatrix = config['leftMatrix'] ? config['leftMatrix'] : 'A';
+    var rightMatrix = config['rightMatrix'] ? config['rightMatrix'] : 'B';    
     var resultName = config['resultName'] ? config['resultName'] : 'output';
     var separator = config['separator'] ? config['separator'] : ',';
 
@@ -7,10 +9,10 @@ function multiplyMatrixesMapReduce(a, b, config) {
         var matrixName = parts[0];
         var i = parts[1];
         var j = parts[2];
-        if (matrixName == 'A') {
+        if (matrixName == leftMatrix) {
             emit(j, row);
         }
-        if (matrixName == 'B') {
+        if (matrixName == rightMatrix) {
             emit(i, row);
         }
     }
@@ -22,10 +24,10 @@ function multiplyMatrixesMapReduce(a, b, config) {
             var row = values[i];
             var parts = row.split(separator);
             var matrixName = parts[0];
-            if (matrixName == 'A') {
+            if (matrixName == leftMatrix) {
                 rowsA.push(row);
             }
-            if (matrixName == 'B') {
+            if (matrixName == rightMatrix) {
                 rowsB.push(row);
             }
         }
@@ -34,14 +36,16 @@ function multiplyMatrixesMapReduce(a, b, config) {
             var rowA = rowsA[a];
             var partsA = rowA.split(separator);
             var valueA = parseFloat(partsA[3]);
+            var i = partsA[1];
 
             for (var b in rowsB) {
                 var rowB = rowsB[b];
                 var partsB = rowB.split(separator);
                 var valueB = parseFloat(partsB[3]);
+                var j = partsB[2];
 
                 var valueC = valueA * valueB;
-                output.push(resultName + separator + partsA[1] + separator + partsB[2] + separator + valueC)
+                output(resultName + separator + i + separator + j + separator + valueC)
             }
         }
     }
@@ -62,7 +66,7 @@ function multiplyMatrixesMapReduce(a, b, config) {
             var value = parseFloat(parts[3]);
             sum += value;
         }
-        output.push(resultName + separator + key + separator + sum);
+        output(resultName + separator + key + separator + sum);
     }
 
     var input = a.concat(b);
@@ -110,6 +114,8 @@ function demo() {
     ];
 
     var config = {
+        leftMatrix: 'A',
+        rightMatrix: 'B',
         resultName: 'C',
         separator: ','
     };
