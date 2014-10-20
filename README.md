@@ -34,7 +34,7 @@ Let's implement classical example of MapReduce computations model: counting word
     "hello map reduce",
     "map map"
   ];
-  var wordsCount = wc(input);
+  var wordsCount = mapReduce(input, map, reduce);;
   ```
   5. `wordsCount` will be:
   
