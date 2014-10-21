@@ -5,6 +5,7 @@ function pageRank(pagesCount, links, notTeleportProbability, iterations) {
     var separator = ',';
     var inputSeparator = '->';
     var inputSeparator2 = ' ';
+    var pageRanksSum = 1.0;
     
     /**
      * Input: array of strings, like "0 -> 1 2" 
@@ -40,7 +41,7 @@ function pageRank(pagesCount, links, notTeleportProbability, iterations) {
     // TODO MapReduce
     function intializePageRanks(pagesCount) {
         var initialPageRank = [];
-        var initialValue = 1.0 / pagesCount;
+        var initialValue = pageRanksSum / pagesCount;
         for(var i = 0; i < pagesCount; i++) {
             initialPageRank.push(pageRankVectorName + separator + i + separator + '0' + separator + initialValue);
         }
@@ -61,7 +62,7 @@ function pageRank(pagesCount, links, notTeleportProbability, iterations) {
             sum += value;
             tmp[parseInt(parts[1])] = value;
         }
-        var additional = (1.0 - sum) / pagesCount;
+        var additional = (pageRanksSum - sum) / pagesCount;
         for(var i = 0; i < pagesCount; i++) {
             tmp[i] += additional;
         }
