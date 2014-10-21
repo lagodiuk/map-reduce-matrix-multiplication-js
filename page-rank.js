@@ -187,7 +187,7 @@ function pageRank(pagesCount, links, notTeleportProbability) {
 
     console.log(JSON.stringify(transitionMatrix, null, 4));
     
-    var pageRankVector = intializePageRanks(3);
+    var pageRankVector = intializePageRanks(pagesCount);
     
     console.log(JSON.stringify(pageRankVector, null, 4));
     
@@ -209,10 +209,10 @@ function pageRank(pagesCount, links, notTeleportProbability) {
     }
 }
 
-var pagesCount = 3;
+var pagesCount = 4;
 var notTeleportProbability = 0.7;
 var links = [
-    "0 -> 1 2",
+    "0 -> 1 2 3",
     "1 -> 2",
     "2 -> 2"
 ];
