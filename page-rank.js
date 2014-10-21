@@ -124,7 +124,7 @@ function multiplyMatrixesMapReduce(a, b, config) {
     return output2;
 }
 
-function pageRank(pagesCount, links, notTeleportProbability) {
+function pageRank(pagesCount, links, notTeleportProbability, iterations) {
     function prepare(input) {
         function map(row, emit) {
             var parts = row.split('->');
@@ -148,7 +148,7 @@ function pageRank(pagesCount, links, notTeleportProbability) {
         return mapReduce(input, map, reduce);
     }
     
-    // TODO
+    // TODO MapReduce
     function intializePageRanks(pagesCount) {
         var initialPageRank = [];
         var initialValue = 1.0 / pagesCount;
@@ -158,7 +158,7 @@ function pageRank(pagesCount, links, notTeleportProbability) {
         return initialPageRank;
     }
     
-    // TODO
+    // TODO MapReduce
     function normalize(pageRankVector, notTeleportProbability) {
         var sum = 0;
         var tmp = new Array(pagesCount);
@@ -190,16 +190,18 @@ function pageRank(pagesCount, links, notTeleportProbability) {
     var pageRankVector = intializePageRanks(pagesCount);
     
     console.log(JSON.stringify(pageRankVector, null, 4));
+
+    var multiplicationConfig = {
+        leftMatrix: 'M',
+        rightMatrix: 'R',
+        separator: ',',
+        resultName: 'R'
+    };
     
-    for(var i = 0; i < 10; i++) {
-        var config = {
-            leftMatrix: 'M',
-            rightMatrix: 'R',
-            separator: ',',
-            resultName: 'R'
-        };
+    for(var i = 0; i < iterations; i++) {
         
-        pageRankVector = multiplyMatrixesMapReduce(transitionMatrix, pageRankVector, config);
+        pageRankVector = 
+            multiplyMatrixesMapReduce(transitionMatrix, pageRankVector, multiplicationConfig);
         
         //console.log(JSON.stringify(pageRankVector, null, 4));
         
@@ -209,12 +211,12 @@ function pageRank(pagesCount, links, notTeleportProbability) {
     }
 }
 
-var pagesCount = 4;
 var notTeleportProbability = 0.7;
+var pagesCount = 3;
 var links = [
-    "0 -> 1 2 3",
+    "0 -> 1 2",
     "1 -> 2",
-    "2 -> 2"
+    "2 -> 2",
 ];
 
-pageRank(pagesCount, links, notTeleportProbability);
+pageRank(pagesCount, links, notTeleportProbability, 10);
